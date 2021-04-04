@@ -9,8 +9,7 @@ A web app for AI-empowered video generation built with Django and Bootstrap.
 ```
 $pip install -r requirements.txt
 ```
-## Database Requirement:
-+ MongoDB
++ Database: MongoDB
 
 ## How to start hosting the web app
 ### 1. If starting a new MongoDB database, first initialize the database to create collections.
