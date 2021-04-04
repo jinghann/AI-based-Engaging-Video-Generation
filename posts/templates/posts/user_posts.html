@@ -1,0 +1,65 @@
+{% extends "posts/base.html" %}
+{% block content %}
+  <div class="album py-2 bg-light">
+      <div class="container">
+      <div class="row mb-2">
+        <h4>My Posts</h4>
+      </div>
+      <div class="row">
+          {% for post in posts %}
+              <div class="col-md-4">
+                  <div class="card mb-3 box-shadow" style="height:20vw">
+                    <video src="{{ post.video.url }}" class="card-img-top" alt="Preview" style="background-color:black;height:60%;"></video>
+                    <a href="{% url 'post-detail' post.id %}">
+                      <i class="fa fa-play-circle" style="position:absolute;left:50%;top:30%;transform: translateX(-50%) translateY(-50%);font-size:50px;color:white"></i>
+                    </a>
+                    <div class="card-body" style="height:40%;padding:10px 20px">
+                      <h6><a class="post-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h6>
+                      <div class="row no-gutters">
+                        <div class="col-md-2 align-self-center">
+                          <img class="rounded-circle" style="width:100%;" src="{{ post.author.profile.image.url }}">
+                        </div>
+                        <div class="col" style="padding-left:15px;">
+                          <a href="#" class="post-author">@ {{ post.author }}</a><br>
+                          <small class="text-muted">{{ post.date_posted | date:"F d, Y" }}</small>
+                        </div>
+                        {% if post.is_private == True %}
+                        <div class="col-md-1 align-self-end" style="margin-left:auto;">
+                          <i class="fa fa-lock" style="font-size:26px;color:#C4C4C4"></i>
+                        </div>
+                        {% endif %}
+
+                      </div>
+
+                    </div>
+                  </div>
+              </div>
+          {% endfor %}
+      </div>
+      </div>
+  </div>
+
+  <div class="container">
+    {% if is_paginated %}
+        {% if page_obj.has_previous %}
+            <a class="btn btn-outline-info mb-4"  href="?page=1">First</a>
+            <a class="btn btn-outline-info mb-4"  href="?page={{ page_obj.previous_page_number}}">Previous</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <a class="btn btn-info mb-4"  href="?page={{ num }}">{{ num }}</a>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a class="btn btn-outline-info mb-4"  href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4"  href="?page={{ page_obj.next_page_number }}">Next</a>
+        <a class="btn btn-outline-info mb-4"  href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
+    {% endif %}
+
+  </div>
+
+{% endblock content %}

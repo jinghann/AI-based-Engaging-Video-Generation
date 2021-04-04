@@ -1,0 +1,1123 @@
+{% load static %}
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <!-- To use Font Awesome 4 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- To use Muuri -->
+    <script src="https://cdn.jsdelivr.net/npm/muuri@0.9.3/dist/muuri.min.js"></script>
+    <!-- jQuery UI  -->
+    <link rel="stylesheet" href="{%static 'videos/css/jquery-ui.min.css' %}">
+    <script src="{%static 'videos/js/jquery-ui.min.js'%}"></script>
+
+    {% if title %}
+		<title>Visual Storyline Generator - {{ title }}</title>
+	   {% else %}
+		<title>Visual Storyline Generator</title>
+    {% endif %}
+
+    <style>
+      body{
+          background-color: #000000
+      }
+
+      .container-fluid{
+        width: 95vw;
+        height: 90vh;
+        margin: 4vh auto;
+      }
+
+      .row.top {
+        height: 69%;
+      }
+      .row.bottom {
+        height: 30%;
+        background-color: #202020
+      }
+      .col.top-left{
+        height: 100%;
+        width: 69%;
+        margin-right: 1%;
+        background-color: #202020;
+      }
+      .col.top-right{
+        height: 100%;
+        width: 30%;
+      }
+
+      .top-right-bottom{
+        width: 100%;
+        height: 85%;
+      }
+      .button {
+        border: none;
+        border-radius: 8px;
+        padding: 10px 25px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 18px;
+        margin: 3px 3px;
+        cursor: pointer;
+      }
+      #exit{
+        color: #000000;
+        background-color: #92888A;
+      }
+      #save,#post{
+        color: #E5E5E5;
+        background-color: #3F3D3D;
+      }
+      #submit{
+        border: none;
+        border-radius: 12px;
+        padding: 10px 10px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 15px;
+        margin: 3px 15px;
+        cursor: pointer;
+      }
+      .col-3 .nav-pills{
+        margin-top: 40%;
+      }
+      .nav .nav-link{
+        margin: 8px 0;
+        color: #E5E5E5;
+        font-size: 1.2vw;
+      }
+      .flex-column .nav-link.active{
+        background-color: #5F5C5C;
+        color: #EED484;
+      }
+      .popup-panel .nav-link{
+        margin: 8px 0;
+        color: #E5E5E5;
+        font-size: 1.2vw;
+      }
+      .popup-panel .nav-link.active{
+        color: #E5E5E5;
+        font-weight: bold;
+        background-color: transparent;
+      }
+
+      #upload-tab .col-md-3{
+        margin: 5px 5px;
+
+      }
+
+      .gallery-item{
+        width: 100%;
+        height: 0px;
+        padding-bottom: 100%;
+        border-radius: 4px;
+        background-color: #202020;
+      }
+      .gallery-item input{
+        position: absolute;
+        opacity:0;
+        cursor: pointer;
+        width: 90%;
+        height: 90%;
+      }
+
+      .gallery-item .img-thumbnail{
+        position:absolute;
+        width: 100%;
+        height: 100%;
+        border: 3px solid #E5E5E5;
+        background-color: inherit;
+        padding: 0;
+      }
+      #exit-cancel-btn{
+        background-color:rgba(0, 0, 0, 0.25);
+        color: #FFFFFF;
+        border: none;
+      }
+      #exit-yes-btn{
+        background-color:rgba(238, 212, 132, 0.74);
+        color:#000000;
+        border: none;
+      }
+      #post-cancel-btn{
+        border:none;
+      }
+      #post-yes-btn{
+        border: none;
+        background-color:rgba(238, 212, 132, 0.9);
+
+      }
+      .hide{
+        display: none;
+      }
+      .popup-panel{
+        height:90%;
+        width:98%;
+        top:10%;left:1%;
+        border: 2px solid;
+        border-radius: 10px;
+        position:absolute;
+        z-index:999;
+        transition: transform 0.5s;
+      }
+      .popup-hide{
+        display: none;
+        transform: translate(0,100%);
+      }
+     .fa-plus{
+      font-size:36px;
+      color:#3F3D3D;
+      cursor: pointer;
+      position: absolute;
+      left:50%; top: 50%;
+      transform: translateX(-50%) translateY(-50%);
+
+     }
+      .delete-btn{
+        font-size:36px;
+        cursor: pointer;
+        position: absolute;
+        left:25%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+      }
+      .delete-btn .fa-trash-o{
+        color:white;
+      }
+      .select-btn{
+        font-size:36px;
+        cursor: pointer;
+        position: absolute;
+        left:75%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+      }
+      .select-btn .fa-plus-circle{
+        color:white;
+      }
+      .grid {
+        position: relative;
+      }
+      .item {
+        display: block;
+        position: absolute;
+        width: 130px;
+        height: 130px;
+        margin: 5px;
+        padding: 3px;
+        z-index: 1;
+        /* background: #eed484; */
+        border-radius: 10px;
+        border: 3px solid #eed484;
+      }
+      .item.muuri-item-dragging {
+        z-index: 3;
+      }
+      .item.muuri-item-releasing {
+        z-index: 2;
+      }
+      .item.muuri-item-hidden {
+        z-index: 0;
+      }
+      .item-content {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+      .grid-img{
+        position:absolute;
+        width: 100%;
+        height: 100%;
+        /* border-radius: 10px; */
+      }
+      .text-button{
+        background-color: transparent;
+        font-size: 16px;
+        color: #E5E5E5;
+        border: none;
+        cursor: pointer;
+        padding: 0 0;
+        margin: 0 20px;
+
+      }
+      /* For jquery ui slider */
+      .ui-widget-header{
+        background: none;
+
+      }
+      .ui-slider .ui-slider-range{
+        border: 4px solid #eed484;
+        border-radius: 8px;
+      }
+
+      .ui-slider-horizontal .ui-slider-handle{
+        top: -.5em;
+        margin-left: -.1em;
+
+      }
+      .ui-slider .ui-slider-handle{
+        width: 0.3em;
+      }
+      .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active,
+      a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover{
+        background: #eed484;
+        border: 2px solid #eed484;
+      }
+      .ui-widget.ui-widget-content{
+        border: none;
+        border-top: 1px solid #ddd;
+      }
+      .ui-widget-content{
+        background: none;
+      }
+      #slider span{
+        position:absolute;
+        height:100%;
+        top:-0.4em;
+        border-left:2px #ddd solid;
+      }
+
+      #duration-tab .ui-widget.ui-widget-content{
+        border-top: none;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+      }
+
+      .grid-item-selected{
+        border-color: #1D57A5;
+      }
+    </style>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="row top">
+      <!-- Top left panel -->
+      <div class="col top-left">
+        <div class="row" style="height:100%">
+          <div class="col-3" style="height:100%; background-color:#313030;">
+            <nav class="nav flex-column nav-pills">
+              <a data-toggle="pill" id="upload-tab-link" class="nav-link active" href="#upload-tab">Upload Files</a>
+              <a data-toggle="pill" id="model-tab-link" class="nav-link" href="#model-tab">AI Model</a>
+            </nav>
+          </div>
+          <div class="col-9" style="height:100%; padding:0 0">
+            <div class="container tab-content " style="height:100%; padding: 20px 20px;">
+
+                <div id="upload-tab" class="tab-pane in active">
+                    <div class="row no-gutters gallery pre-scrollable">
+                      <div class='col-md-3'>
+                        <div class="gallery-item" style="border: 2px dashed #3F3D3D;">
+                          <i class="fa fa-plus"></i>
+                          <input type="file" class="file" name="file" accept="video/*,image/*" id="upload" multiple>
+                        </div>
+                      </div>
+                    </div>
+
+                </div>
+
+                <div id="model-tab" class="tab-pane in" style="padding:10% 10%;">
+                  <p style="color:white">Choose an AI model:</p>
+                  <div class="form-group">
+                    <select id="algo-picker" class="selectpicker show-tick" title="AI algorithms" data-live-search="true" data-size="4">
+                      <option value="Bnb">Bnb</option>
+                      <option value="Bnb_rand">Bnb_rand</option>
+                      <option value="TSP">TSP</option>
+                      <option value="WBP">WBP</option>
+                      <option value="ShotCSP">ShotCSP</option>
+                    </select>
+                    <button type="button" id="submit">Run Model</button>
+                  </div>
+                </div>
+            </div>
+          </div>
+
+          <div class="col popup-panel popup-hide" >
+            <!-- popup-hide -->
+            <div class="row" style="height:20%;padding: 10px 20px; background-color:#3F3D3D;border-radius:10px;">
+
+              <nav class="nav nav-pills">
+                <a data-toggle="pill" class="nav-link active" href="#duration-tab">Duration</a>
+                <a data-toggle="pill" class="nav-link" href="#speed-tab">Speed</a>
+              </nav>
+              <a id="close-popup"><i class="fa fa-chevron-circle-down" style="font-size:30px;color:#C4C4C4;position:absolute;top:20px;right:25px;cursor:pointer;"></i></a>
+            </div>
+            <div class="row" style="height: 80%;background-color: #202020;padding:20px 20px;">
+              <div class="tab-content" style="height:100%;width:100%">
+                <div id="duration-tab" class="tab-pane in active" style="height:100%;width:100%;padding: 0 20px;" >
+                    <p>
+                    <small style="font-size:18px; color:#928B8A;margin-right:30px;">Quick Select</small>
+                    <button class="text-button" onclick="setDur(0.5)">0.5s</button>
+                    <button class="text-button" onclick="setDur(1)">1s</button>
+                    <button class="text-button" onclick="setDur(2.5)">2.5s</button>
+                    <button class="text-button" onclick="setDur(-1)">Original</button>
+                    </p><br>
+                    <div id="slider-range" style="height:80px;width:100%;border-radius:10px;font-size:0;overflow:hidden;">
+                    </div>
+                    <small style="color:#ddd;margin-left:auto;">Selected range:&nbsp;
+                      <span id="selected-start"></span>s&nbsp;->&nbsp;
+                      <span id="selected-end"></span>s
+                    </small>
+
+                </div>
+                <div id="speed-tab" class="tab-pane" style="height:100%;width:100%;padding: 0 20px;">
+                  <div label="multiple">
+                    <div style="margin-bottom:20px;;"><small style="font-size:18px; color:#928B8A;">Multiple</small></div>
+                    <div id="slider">
+                      <span style="left:0%;"></span>
+                      <span style="left:16.67%;"></span>
+                      <span style="left:33.33%;"></span>
+                      <span style="left:50%;"></span>
+                      <span style="left:66.67%;"></span>
+                      <span style="left:83.33%;"></span>
+                      <span style="left:100%;"></span>
+                    </div>
+                    <div style="color:#ddd;width:100%;position:relative;">
+                      <small style="position:absolute;left:0%">0.25x</small>
+                      <small style="position:absolute;left:14.67%">0.5x</small>
+                      <small style="position:absolute;left:31.33%;">0.75x</small>
+                      <small style="position:absolute;left:48%;">1.0x</small>
+                      <small style="position:absolute;left:64.67%;">2.0x</small>
+                      <small style="position:absolute;left:81.33%;">4.0x</small>
+                      <small style="position:absolute;left:98%;">8.0x</small>
+                    </div>
+                  </div>
+
+                  <div label="duration" style="margin-top:15%;">
+                    <small style="font-size:18px; color:#928B8A;margin-right:25px;">Duration</small>
+                    <small id="org-duration" style="color:#ddd"></small><small style="color:#ddd">s&nbsp;&nbsp;|--->&nbsp;</small>
+                    <input type="number" step=0.1 id="new-duration" name="duration" style="width:90px;color:#ddd;background-color:#3F3D3D;border:none;border-radius:5px;">
+                    <small style="color:#ddd">s</small>
+                  </div>
+
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Top right panel -->
+      <div class="col top-right">
+        <div class="row mr-4 justify-content-end">
+          <button type="button" id="exit" class="button" data-toggle="modal" data-target="#exitPopup">Exit</button>
+          <button type="button" id="save" class="button">Save</button>
+          <button type="button" id="post" class="button">Post</button>
+
+        </div>
+        <!-- Modal for exit popup-->
+        <div class="modal fade" id="exitPopup" tabindex="-1" role="dialog" aria-labelledby="exitPopupLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" style="background-color:#C4C4C4; color:#000000">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exitPopupLabel">Are you sure to exit?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                *Note:  Changes you’ve made won’t be saved if you click Yes.
+              </div>
+              <div class="modal-footer">
+                <button type="button" id="exit-cancel-btn" class="btn btn-secondary" data-dismiss="modal" >Cancel</button>
+                <button type="button" id="exit-yes-btn" class="btn btn-primary" onclick="javascript:window.location.href='{% url "create-video-home" %}';">Yes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Modal for save popup-->
+        <div class="modal fade" id="savePopup" tabindex="-1" role="dialog" aria-labelledby="savePopupLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" style="background-color:#C4C4C4; color:#000000">
+              <div class="modal-header">
+                <h5 class="modal-title" id="savePopupLabel">Save your project as draft</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form id="save_form" action="{% url 'save-project' project.id %}" method="POST">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <label for="save-title" class="col-form-label">Title:</label>
+                    <input type="text" class="form-control" name="save-title" id="save-title" placeholder="Save as...">
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" id="save-cancel-btn" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="submit" form="save_form" id="save-yes-btn" class="btn btn-primary">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal for post popup-->
+        <div class="modal fade" id="postPopup" tabindex="-1" role="dialog" aria-labelledby="postPopupLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="postPopupLabel">Share your video with others</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+
+              <div class="modal-body">
+                <div class="container-fluid" style="height:100%;width:100%;">
+                  <div class="row" style="height:100%;">
+                    <div class="col-md-6">
+                      <form id="post_form" action="{% url 'create-post' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                          <label for="post-title" class="col-form-label">Title:</label>
+                          <input type="text" class="form-control" name="post-title" placeholder="Give a title for your post">
+                        </div>
+                        <div class="form-group">
+                          <label for="post-content" class="col-form-label">Content:</label>
+                          <textarea class="form-control" name="post-content" rows=5 placeholder="Share your thoughts"></textarea>
+
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="post-visibility" id="post-private" value="1">Private
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="post-visibility" id="post-public" value="0" checked>Public
+                        </div>
+                      </form>
+
+
+                    </div>
+                    <div class="col-md-5 ml-auto" style="padding-left:0;">
+                      <video id="post-video" src="#" autoplay loop controls style="height:50%;width:100%;background-color:black;">
+                      </video>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" id="post-cancel-btn" class="btn btn-secondary" data-dismiss="modal" >Cancel</button>
+                <button type="submit" form="post_form" id="post-yes-btn" class="btn">Post</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Showing generated video -->
+        <div class="row top-right-bottom mt-2 align-content-end">
+            <video id="videodisplay" src="#" width="100%" height="100%" autoplay loop controls>
+            </video>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom panel -->
+    <div class="row bottom mt-4">
+      <div class="col" style="height:100%">
+        <div class="row" style="height:15%;background-color:#3F3D3D">
+          <div style="height:100%;margin-left:auto;margin-right:30px;"><i id="unselected" class="fa fa-trash-o" style="display:inline-block;color:white;cursor:pointer;"> Delete</i></div>
+        </div>
+        <div class="row" style="height:85%;">
+          <div class="col" style="height:100%;margin:10px 10px;overflow:auto">
+              <div class="grid">
+
+              </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="text/javascript">
+
+    var hidden = true;
+    var selected = false; // grid item selected for deletion from sequence
+    var selectedImgIndex = null;
+    var imgFile = []; //文件流
+    var imgSrc = []; //图片路径
+    var imgName = []; //图片名字
+    var orgDuration = []; // 图片原始时长
+    var custDuration = []; // 图片用户自定义时长
+    var custSpeed = []; // 图片用户自定义倍速
+
+    var grid = new Muuri('.grid',{
+                dragEnabled: true,
+                dragStartPredicate: {
+                distance: 20, // user must drag for 20 pixels before the drag procedure starts and the item starts moving
+                },
+              // dragAxis:'x',
+              });
+
+    var custSequence = [];
+
+    // 页面初始加载草稿数据
+    window.onload = function(){
+      // 显示上传文件
+      addNewContent('.gallery');
+      // 加载视频
+      $('#videodisplay').get(0).pause();
+      $('#videodisplay').attr("src",'{{ project.thumbnail.url }}');
+      $('#videodisplay').get(0).load();
+
+      // 更新底部image grid
+      grid.remove(grid.getItems(),{ removeElements: true });
+      for (index of custSequence){
+        console.log(index);
+        var new_item = document.createElement("div");
+        new_item.className = 'item';
+        if (imgFile[index].type.startsWith("image")){
+          new_item.innerHTML = '<div class="item-content"><img src="'+ imgSrc[index] + '"class="grid-img"></img></div>';
+        }else if (imgFile[index].type.startsWith('video')) {
+          new_item.innerHTML = '<div class="item-content"><video src="'+ imgSrc[index] + '"class="grid-img" autoplay loop></video></div>';
+        }
+        grid.add(new_item);
+        // 标记被选中的图片
+        $('#upload-tab .gallery .gallery-item').eq(index+1).children('.img-thumbnail').css('border-color','#EED484');
+      }
+    } // end of onload function
+
+
+
+    $(function() {
+      // load chosen AI model
+      $('#algo-picker').val('{{ project.AI_algo }}');
+
+      custSequence =  JSON.parse('{{ project.cust_seq }}'); // to convert string to array
+      custDuration = JSON.parse('{{ project.cust_dur }}');
+      custSpeed = JSON.parse('{{ project.cust_speed }}');
+      orgDuration = {{ org_dur | safe }};
+      // load imgFile, imgSrc stored values
+      var img_urls = {{ img_urls | safe }};
+      for (url of img_urls) {
+        imgSrc.push(url);
+        fetch(url)
+        .then(res => res.blob())
+        .then(blob => {
+          var file = new File([blob],url.split('/').pop(),{type:blob.type});
+          imgFile.push(file);
+        });
+      }
+
+
+      // 鼠标经过显示删除按钮
+      $('.gallery').on('mouseover', '.gallery-item', function(){
+        //console.log(this);
+        $(this).children('.img-thumbnail').css("opacity","0.6")
+        $(this).children('div').removeClass('hide');
+      });
+      // 鼠标离开隐藏删除按钮
+      $('.gallery').on('mouseleave', '.gallery-item', function() {
+        $(this).children('.img-thumbnail').css("opacity","")
+        $(this).children('div').addClass('hide');
+      });
+      // 单个图片删除
+      $(".gallery").on("click", '.gallery-item .delete-btn', function() {
+          // 获取该图片相对于所有图片的位置
+          // 因为上传图片按钮也属于同级元素，因此获取的index需要 -1
+          // var index = $(this).parent().parent().parent().index() - 1;
+          var index = $(this).attr('index');
+          console.log('Delete index: ',index);
+          imgSrc.splice(index, 1);
+          imgFile.splice(index, 1);
+          imgName.splice(index, 1);
+          var boxId = ".gallery";
+          addNewContent(boxId);
+      });
+
+      $("#slider-range").slider({
+        range: true,
+        min:0,
+        max:5,
+        values:[0,2],
+        step: 0.1,
+        slide: function(event,ui) {
+            $(ui.handle).text(ui.value);
+        },
+        slide:function(event,ui){
+          $('#selected-start').text(ui.values[0]);
+          $('#selected-end').text(ui.values[1]);
+        },
+        change:function(event,ui){
+          $('#selected-start').text(ui.values[0]);
+          $('#selected-end').text(ui.values[1]);
+        }
+      });
+
+      $("#slider").slider({
+        min: 1,
+        max: 7,
+        value: 4,
+        step:0.1,
+        slide: function(event,ui){
+          var org = parseFloat($("#org-duration").text());
+          if (ui.value <= 4){
+            $("#new-duration").val((org/(ui.value*0.25)).toFixed(2));
+          }else{
+            $("#new-duration").val((org/(2**(ui.value-4))).toFixed(2));
+          }
+        }
+      });
+
+      $('#post').click(function(){
+        $('#postPopup').modal({backdrop:"static"});
+
+        var video_src = $('#videodisplay').attr("src");
+        $('#post-video').get(0).pause();
+        $('#post-video').attr("src",video_src);
+        $('#post-video').get(0).load();
+        $('#post-video').get(0).play();
+      });
+
+      $('#save').click(function(){
+        $('#savePopup').modal({backdrop:"static"});
+        $('#save-title').val('{{project.title}}');
+
+      });
+
+
+    }); // end of ducument ready function
+
+
+
+
+
+/* --------------上传文件部分 --------------------*/
+
+
+    // 前端文件上传
+    $('#upload').change(function(){
+      var imgBox = '.gallery';
+      var fileList = this.files;
+      for (var i = 0; i < fileList.length; i++) {
+          var imgSrcI = getObjectURL(fileList[i]);
+          imgFile.push(fileList[i]);
+          imgSrc.push(imgSrcI);
+          imgName.push(fileList[i].name);
+      }
+      addNewContent(imgBox);
+      this.value = null; //上传相同图片
+    });
+
+    //提交请求: 图片发送后台
+    $('#submit').click(function(){
+      // the chosen AI algorithm
+      var state = $('#algo-picker option:selected').val();
+      // console.log("Choosing AI algorithm: ",state);
+      // FormData上传图片
+      var formFile = new FormData();
+      formFile.append("model", state);
+
+      // 遍历图片imgFile添加到formFile里面
+      $.each(imgFile, function(i, file) {
+        formFile.append('uploads[]',file);
+      });
+
+      $.ajax({
+         url: '{% url "upload-file" %}',
+         type: 'POST',
+         dataType:'json',
+         data: formFile,
+         async: true,
+         cache: false,
+         contentType: false,
+         processData: false,
+         beforeSend:function (xhr,setting) {xhr.setRequestHeader("X-CSRFToken","{{ csrf_token }}");},
+         success: function(backInfo){
+            console.log('seq',backInfo.sequence);
+           // 更新视频
+           $('#videodisplay').get(0).pause();
+           $('#videodisplay').attr("src",backInfo.url);
+           $('#videodisplay').get(0).load();
+           $('#videodisplay').get(0).play();
+
+           // 更新底部image grid
+           grid.remove(grid.getItems(),{ removeElements: true });
+           for (index of backInfo.sequence){
+             var new_item = document.createElement("div");
+             new_item.className = 'item';
+             if (imgFile[index].type.startsWith("image")){
+               new_item.innerHTML = '<div class="item-content"><img src="'+ imgSrc[index] + '"class="grid-img"></img></div>';
+             }else if (imgFile[index].type.startsWith('video')) {
+               new_item.innerHTML = '<div class="item-content"><video src="'+ imgSrc[index] + '"class="grid-img" autoplay loop></video></div>';
+             }
+             grid.add(new_item);
+             // 标记被选中的图片
+             $('#upload-tab .gallery .gallery-item').eq(index+1).children('.img-thumbnail').css('border-color','#EED484');
+           }
+
+           // 更新变量值custDuration,custSpeed *注意：数组需要深拷贝！！
+           orgDuration = backInfo.initDuration.map(function(value){return value;});
+           custDuration = backInfo.initDuration.map(function(value){return value;});
+           custSpeed = backInfo.speed.map(function(value){return value;});
+
+           // 自动返回upload files tab
+           $('#upload-tab').addClass('active show');
+           $('#model-tab').removeClass('active show');
+           $('#upload-tab-link').addClass('active show');
+           $('#model-tab-link').removeClass('active show');
+
+
+
+         } // end of success function
+      }) // end of ajax
+    })
+
+
+/* ----------- Popup Panel 部分-----------------*/
+    // 弹出popup-panel
+    $('.grid').on('dblclick','.item-content',function(){
+      if (hidden){
+        $('.popup-panel').removeClass('popup-hide');
+        var slider_range = '#slider-range';
+        var slider = '#slider';
+        var slider_w = $(slider_range).width();
+        var slider_h = $(slider_range).height();
+
+        // 图片文件
+        if ($(this).children()[0].tagName == "IMG"){
+          var src = $(this).find('img').attr('src');
+          var img_h = $(this).find('img').height();
+          var img_w = $(this).find('img').width();
+          var img_new_h = slider_h;
+          var img_new_w = img_w * (img_new_h/img_h);
+          var count = Math.floor(slider_w/img_new_w);
+
+          // 更新popup-panel duration & speed
+          var src_index = imgSrc.indexOf(src);
+          var duration = custDuration[src_index];
+          var speed = custSpeed[src_index];
+
+          selectedImgIndex = src_index;
+          // 更新duration slider - min,max,values （图片最长5s，初始值2s）
+          $(slider_range).slider("option",{min:0,max:5,values:[duration[0],duration[1]]});
+          // 更新slider_range显示被点击的图片
+          $(slider_range).children('img').remove();
+          $(slider_range).children('video').remove();
+          $(slider_range).append('<img src="'+src+'" style="height:100%;width:'+img_new_w+'px; border-top-left-radius:inherit;border-bottom-left-radius:inherit;" alt="">');
+          for (var i=1; i<count;i++){
+            $(slider_range).append('<img src="'+src+'" style="height:100%;width:'+img_new_w+'px; alt="">');
+          }
+          var last_shift = img_new_w - Math.floor(slider_w - count*img_new_w) + 1;
+          $(slider_range).append('<img src="'+src+'" style="height:100%;width:'+img_new_w+'px;margin-left:-'+last_shift+'px; border-top-right-radius:inherit;border-bottom-right-radius:inherit;" alt="">');
+
+          // 更新speed slider - value
+          if (speed <= 1){
+            $(slider).slider("option",{value:speed*4});
+          }else{
+            $(slider).slider("option",{value:Math.log2(speed)+4});
+          }
+
+          $('#org-duration').text((duration[1] - duration[0]).toFixed(2));
+          $('#new-duration').val(((duration[1] - duration[0])/speed).toFixed(2));
+
+
+        // 视频文件
+        }else if ($(this).children()[0].tagName == "VIDEO") {
+          var src = $(this).find('video').attr('src');
+          var vid_h = $(this).find('video').height();
+          var vid_w = $(this).find('video').width();
+          var vid_new_h = slider_h;
+          var vid_new_w = vid_w * (vid_new_h/vid_h);
+          var count = Math.floor(slider_w/vid_new_w);
+
+          // 更新popup-panel duration & speed
+          var src_index = imgSrc.indexOf(src);
+          var duration = custDuration[src_index];
+          var org_dur = orgDuration[src_index]; // original duration
+          var speed = custSpeed[src_index];
+          console.log('Speed: ',speed);
+          selectedImgIndex = src_index;
+          // 更新duration slider - min, max, values (视频最长为原始文件时长)
+          $(slider_range).slider("option",{min:org_dur[0],max:org_dur[1],values:[duration[0],duration[1]]});
+          // 更新slider_range显示被点击的视频
+          $(slider_range).children('img').remove();
+          $(slider_range).children('video').remove();
+          $(slider_range).append('<video src="'+src+'" style="height:100%;width:'+vid_new_w+'px; border-top-left-radius:inherit;border-bottom-left-radius:inherit;" autoplay loop></video>');
+          for (var i=1; i<count;i++){
+            $(slider_range).append('<video src="'+src+'" style="height:100%;width:'+vid_new_w+'px;" autoplay loop></video>');
+          }
+          var last_shift = vid_new_w - Math.floor(slider_w - count*vid_new_w) + 1;
+          $(slider_range).append('<video src="'+src+'" style="height:100%;width:'+vid_new_w+'px;margin-left:-'+last_shift+'px;border-top-right-radius:inherit;border-bottom-right-radius:inherit;" autoplay loop></video>');
+
+          // 更新speed slider - value
+          if (speed <= 1){
+            $(slider).slider("option",{value:speed*4});
+          }else{
+            $(slider).slider("option",{value:Math.log2(speed)+4});
+          }
+          $('#org-duration').text((duration[1] - duration[0]).toFixed(2));
+          $('#new-duration').val(((duration[1] - duration[0])/speed).toFixed(2));
+
+
+        }
+
+
+      }else {
+        $('.popup-panel').addClass('popup-hide');
+        selectedImgIndex = null;
+
+      }
+       hidden = !hidden;
+
+
+    });
+
+    // 用户截取片段
+    $("#slider-range").on("slidestop",function(event,ui){
+      var values = $(this).slider('values');
+      var org_dur = values[1] - values[0];
+      var speed = custSpeed[selectedImgIndex];
+      console.log("New range slider values: ",values);
+      custDuration[selectedImgIndex] = values;
+      // 更新视频
+      updateVideo();
+      // 更新speed-tab
+      $('#org-duration').text(org_dur.toFixed(2));
+      $('#new-duration').val((org_dur/speed).toFixed(2));
+
+
+    });
+
+
+    // 用户改变倍速 - slider
+    $('#slider').on("slidestop",function(event,ui){
+      var value = $(this).slider('value');
+      if (value <= 4){
+        custSpeed[selectedImgIndex] = value/4;
+      }else{
+        custSpeed[selectedImgIndex] = 2**(value-4);
+      }
+      console.log("New speed selected: ",custSpeed[selectedImgIndex]);
+      // 更新视频
+      updateVideo();
+    })
+
+    // 用户改变倍速  - 输入目标时长
+    $("#new-duration").change(function(){
+      var newdur = this.value;
+      var orgdur = parseFloat($("#org-duration").text());
+      var ratio = orgdur/newdur;
+
+      if (ratio >= 1){
+        var val = Math.log2(ratio) + 4;
+        $("#slider").slider("option",{value:Math.min(val,7)});
+
+      }else{
+        var val = ratio * 4;
+        $("#slider").slider("option",{value:Math.max(val,1)});
+      }
+      $('#slider').trigger('slidestop');
+    });
+
+    // 点击隐藏按钮关闭popup-panel
+    $('#close-popup').on("click",function(){
+      $('.popup-panel').addClass('popup-hide');
+      hidden = true;
+      // 取消选中图片
+      $('.grid').children().removeClass('grid-item-selected');
+      selected = false;
+      selectedImgIndex = null;
+    });
+
+/* --------------用户自定义sequence部分---------------- */
+
+    // 1.用户更改排序，向后端发送新排序，更新视频
+    grid.on('dragEnd', function (item, event) {
+       // 更新grid DOM元素排序使其与拖拽后保持一致
+        grid.synchronize();
+        console.log('拖拽结束');
+        // 更新视频
+        updateVideo();
+    });
+
+    // 2.用户增选图片
+    $(".gallery").on("click", '.gallery-item .select-btn', function() {
+      // gallery标记被选中的图片
+      $(this).parent().siblings('.img-thumbnail').css('border-color','#EED484');
+
+      // 获取图片在gallery中的index
+      var index = $(this).attr('index');
+      console.log('Select index: ',index);
+      // 添加图片到底部image grid （将添加至grid末尾）
+      var new_item = document.createElement("div");
+      new_item.className = 'item';
+      if (imgFile[index].type.startsWith("image")){
+        new_item.innerHTML = '<div class="item-content"><img src="'+ imgSrc[index] + '"class="grid-img"></img></div>';
+      }else if (imgFile[index].type.startsWith('video')) {
+        new_item.innerHTML = '<div class="item-content"><video src="'+ imgSrc[index] + '"class="grid-img" autoplay loop></video></div>';
+      }
+      grid.add(new_item);
+      // 更新视频
+      updateVideo();
+    });
+
+    // 3.用户从底部grid删除图片
+    $('#unselected').on('click',function(){
+      var selectedItem = $('.grid').find('.grid-item-selected');
+      if (selectedItem.length > 0){
+        // 从底部grid移除图片
+        var grid_index = selectedItem.index();
+        grid.remove(grid.getItems(grid_index),{removeElements:true});
+        console.log('Removing image index in grid: ',grid_index);
+        // 更新视频
+        updateVideo();
+        // 取消gallery中该图片的选中
+        var gallery_index = imgSrc.indexOf(selectedItem.find('.grid-img').attr('src'));
+        console.log('Unselecting image index in gallery: ',gallery_index);
+        $('#upload-tab .gallery .gallery-item').eq(gallery_index+1).children('.img-thumbnail').css('border-color','');
+        // 关闭popup-panel
+        if (!hidden) {
+          $('.popup-panel').addClass('popup-hide');
+          hidden = true;
+        }
+        // 取消底部图片的选中效果
+        $('.grid').children().removeClass('grid-item-selected');
+        selected = false;
+        selectedImgIndex = null;
+      }
+    });
+
+    // 3.1 用户双击底部grid图片 显示效果
+    $('.grid').on('dblclick','.item',function(){
+      if (!selected){
+        $(this).addClass('grid-item-selected');
+      }else {
+        $(this).removeClass('grid-item-selected');
+        $(this).siblings().removeClass('grid-item-selected');
+      }
+      selected = !selected;
+    });
+
+/* ---------------发布视频部分 ----------------------------*/
+
+
+
+
+
+/* ---------------辅助功能---------------------*/
+    // 提交请求：更新视频 (user customization 可以包括： 拖拽更改顺序，增删选中图片)
+    function updateVideo(){
+      // 获取当前grid中图片顺序,对应自定义时长、倍速
+      var custom_seq = []
+      var custom_dur = []
+      var custom_speed = []
+      $.each(grid.getItems(),function(i,item){
+        var src_url = item.getElement().childNodes[0].childNodes[0].attributes['src'].value;
+        index = imgSrc.indexOf(src_url);
+        custom_seq.push(index);
+        custom_dur.push(custDuration[index]);
+        custom_speed.push(custSpeed[index]);
+      });
+
+      $.ajax({
+        type:"POST",
+        url:'{% url "customize-video" %}',
+        dataType: "json",
+        data:{
+          "seq": custom_seq,  // 后端接收时为array of string,需要转为int
+          "duration": custom_dur,
+          "speed": custom_speed,
+        },
+        traditional: true, // need to add this for sending array
+        beforeSend:function (xhr,setting) {xhr.setRequestHeader("X-CSRFToken","{{ csrf_token }}");},
+        success:function(backInfo){
+          console.log(backInfo);
+          // 前端更新视频显示
+          $('#videodisplay').get(0).pause();
+          $('#videodisplay').attr("src",backInfo.url);
+          $('#videodisplay').get(0).load();
+          $('#videodisplay').get(0).play();
+
+        }
+      })
+
+    }
+
+    //gallery图片展示
+    function addNewContent(obj) {
+        $(obj).children("div.append-item").remove()
+
+        for (var a = 0; a < imgSrc.length; a++) {
+          // console.log(imgFile[a].type);
+          // console.log(imgFile[a].type == 'video/mp4');
+          // 视频文件
+          if (imgFile[a].type.startsWith("video")){ // 视频文件
+            $(obj).append('<div class="col-md-3 append-item"><div class="gallery-item">'+
+            '<video src="' + imgSrc[a] + '"class="img-thumbnail" autoplay loop></video>' +
+            '<div class="hide"><a index="'+a+'" class="delete-btn">'+
+            '<i class="fa fa-trash-o"></i></a><a index="'+a+'" class="select-btn"><i class="fa fa-plus-circle"></i></a></div></div></div>');
+          }else if (imgFile[a].type.startsWith("image")){ // 图片文件
+            $(obj).append('<div class="col-md-3 append-item"><div class="gallery-item">'+
+            '<img src="' + imgSrc[a] + '" class="img-responsive img-thumbnail" alt="">' +
+            '<div class="hide"><a index="'+a+'" class="delete-btn">'+
+            '<i class="fa fa-trash-o"></i></a><a index="'+a+'" class="select-btn"><i class="fa fa-plus-circle"></i></a></div></div></div>');
+          };
+        }
+    }
+
+    //建立可存取到file的url
+    function getObjectURL(file) {
+        var url = null;
+        if (window.createObjectURL != undefined) { // basic
+            url = window.createObjectURL(file);
+        } else if (window.URL != undefined) { // mozilla(firefox)
+            url = window.URL.createObjectURL(file);
+        } else if (window.webkitURL != undefined) { // webkit or chrome
+            url = window.webkitURL.createObjectURL(file);
+        }
+        return url;
+    }
+
+    // 自定义片段时长
+    function setDur(duration){
+      console.log('Select new duration: ',duration);
+
+      if (duration == -1){
+        if (imgFile[selectedImgIndex].type.startsWith("image")){
+          var org_dur = [0,2];
+        }else if (imgFile[selectedImgIndex].type.startsWith("video")) {
+          var org_dur = orgDuration[selectedImgIndex];
+        }
+        $('#slider-range').slider("option",{values:[org_dur[0],org_dur[1]]});
+
+      }else {
+        if (imgFile[selectedImgIndex].type.startsWith("video")){
+          if (duration > orgDuration[selectedImgIndex][1]){
+            duration = orgDuration[selectedImgIndex][1];
+          }
+        }
+        $('#slider-range').slider("option",{values:[0,duration]});
+      }
+      $('#slider-range').trigger('slidestop');
+    }
+
+
+
+  </script>
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+
+
+
+</body>
+</html>

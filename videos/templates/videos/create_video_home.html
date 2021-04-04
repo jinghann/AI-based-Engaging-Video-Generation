@@ -1,0 +1,130 @@
+{% extends "posts/base.html" %}
+{% load staticfiles %}
+{% block head %}
+<!-- For using jQuery -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<!-- jQuery UI  -->
+<link rel="stylesheet" href="{%static 'videos/css/jquery-ui.min.css' %}">
+<script src="{%static 'videos/js/jquery-ui.min.js'%}"></script>
+
+<style>
+    body{
+        background-color: #202020
+    }
+
+    .container-fluid{
+      width: 90%;
+    }
+
+    .row.top {
+      height: 43vh;
+      background-color: #3F3D3D
+    }
+    .row.bottom {
+      height: 35vh;
+      background-color: #3F3D3D
+    }
+    .img-thumbnail{
+      position:absolute;
+      width:100%;
+      height:100%;
+      background-color: black;
+      border: 1px solid black;
+    }
+    .draft-info-title{
+      width:100%;
+      background-color: #fff;
+      position:absolute;
+      top:100%;
+      transform: translateY(-100%);
+      padding:0 5px;
+      font-weight: 500;
+      font-size:smaller;
+
+    }
+    .hide{
+      display:none;
+    }
+    .edit-btn{
+      position:absolute;
+      left:25%;
+      top:50%;
+      transform: translateX(-50%) translateY(-50%);
+    }
+    .delete-btn{
+      position:absolute;
+      left:75%;
+      top:50%;
+      transform: translateX(-50%) translateY(-50%);
+    }
+
+</style>
+{% endblock head %}
+{% block content %}
+  <!-- <div class="row col">
+    <input type="image" src="{% static "videos/images/back-arrow-gray.png" %}" value="<back" width="46px" height="40px" onclick="javascript:window.history.back();"/>
+  </div> -->
+  <div class="row top mt-3 justify-content-center align-items-center ">
+    <div class="col-3">
+      <div class="row justify-content-center ">
+        <a href="{% url 'edit-video-main' %}">
+          <img src="{% static "videos/images/plus.png" %}" width="70px" height="70px">
+        </a>
+      </div>
+      <div class="row mt-3 justify-content-center">
+        <h5 style="color:#E5E5E5">Create New Project</h5>
+      </div>
+
+    </div>
+  </div>
+  <div class="row bottom mt-3">
+      <div class="container-fluid" style="width:100%;height:100%;margin:0;padding:10px 20px;">
+        <div class="row no-gutters" >
+          <div class="col">
+            <h5 style="color:#E5E5E5;margin:0;">My Drafts</h5>
+          </div>
+        </div>
+        <div class="row no-gutters" style="height:80%;overflow-x:hidden;overflow-y:auto;">
+          {% for project in draft %}
+          <div class="col-md-2" style="padding:20px;">
+            <div class="draft-gallery-item" style="position:relative;width:100%;height:0px;padding-bottom:100%;">
+              <video src="{{ project.thumbnail.url }}" class="img-thumbnail" alt=""></video>
+              <div class="draft-info-title">
+                <span>{{ project.title }}</span>
+              </div>
+              <div id="edit" class="hide">
+                <a href="{%url 'edit-video-main-draft' project.id %}" class="edit-btn">
+                  <i class="fa fa-edit" style="font-size:36px;color:white"></i>
+                </a>
+                <a href="{% url 'delete-draft' project.id %}" class="delete-btn">
+                  <i class="fa fa-trash-o" style="font-size:36px;color:white"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+  </div>
+{% endblock content %}
+
+{% block js %}
+<script type="text/javascript">
+  $(function() {
+
+    // 鼠标经过显示删除按钮
+    $('.draft-gallery-item').on('mouseover',function(){
+
+      $(this).children('.img-thumbnail').css("opacity","0.6")
+      $(this).children('div #edit').removeClass('hide');
+    });
+    // 鼠标离开隐藏删除按钮
+    $('.draft-gallery-item').on('mouseleave', function() {
+      $(this).children('.img-thumbnail').css("opacity","")
+      $(this).children('div #edit').addClass('hide');
+    });
+
+  });
+
+</script>
+{% endblock js%}

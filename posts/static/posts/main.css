@@ -1,0 +1,101 @@
+body {
+    background: #fafafa;
+    margin-top: 5rem;
+}
+
+.content-section {
+    background: #ffffff;
+    padding: 10px 20px;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.post-title {
+    color: #444444;
+}
+
+a.post-title:hover {
+    color: #a58416;
+    text-decoration: none;
+}
+
+a.post-author{
+  color: #444444;
+}
+
+a.post-author:hover{
+  color: #326295;
+  text-decoration: none;
+}
+
+.post-content {
+    white-space: pre-line;
+}
+
+.post-metadata {
+    padding-bottom: 1px;
+    margin-bottom: 4px;
+}
+
+.post-metadata a:hover {
+    color: #333;
+    text-decoration: none;
+}
+
+.navbar-user-img {
+    height: 50px;
+    width: 50px;
+    margin-right: 10px;
+    border-color: white;
+    border-style: solid;
+    border-width: medium;
+}
+.post-user-img {
+    height: 50px;
+    width: 50px;
+    border-color: white;
+    border-style: solid;
+    border-width: medium;
+}
+
+.navbar-user-img:hover {
+    border-width: 4px;
+}
+
+
+/* Profile Page */
+
+.account-img {
+    height: 125px;
+    width: 125px;
+    margin-right: 20px;
+    margin-bottom: 16px;
+}
+
+.account-heading {
+    font-size: 2.5rem;
+}
+
+.btn-info{
+  background-color: #928B8A;
+  border-color: #928B8A;
+}
+
+.btn-info:hover,.btn-info:not(:disabled):not(.disabled):active {
+  background-color: #675A53;
+  border-color: #675A53;
+}
+
+.btn-outline-info {
+    color: #928B8A;
+    background-color: transparent;
+    background-image: none;
+    border-color: #928B8A;
+}
+
+.btn-outline-info:hover, .btn-outline-info:not(:disabled):not(.disabled):active {
+    color: #fff;
+    background-color: #928B8A;
+    border-color: #928B8A;
+}

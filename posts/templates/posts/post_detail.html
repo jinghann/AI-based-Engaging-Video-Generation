@@ -1,0 +1,165 @@
+{% extends "posts/base.html" %}
+{% load staticfiles %}
+{% block head %}
+
+<style>
+  #comment-btn{
+    background-color: rgb(235, 138, 49,0.82);
+    border: none;
+    font-size: smaller;
+  }
+  #cancel-btn{
+    color: black;
+    background: none;
+    border: none;
+    font-size: smaller;
+  }
+  #login-btn{
+    background-color: rgb(222, 184, 59,0.5);
+    color: #fff;
+    border:none;
+    font-size:smaller;
+  }
+  #delete-yes-btn{
+    background-color: #EED484;
+    border-color: #EED484;
+    color: black;
+  }
+</style>
+{% endblock head %}
+
+{% block content %}
+<div class="row no-gutters" style="margin-bottom:15px;">
+  <div class="col offset-1">
+    <input type="image" src="{% static "posts/images/back-arrow.png" %}" value="<back" width="46px" height="40px" onclick="javascript:window.history.back();"/>
+  </div>
+</div>
+<div class="row no-gutters">
+  <!-- Left side -->
+  <div class="col-md-6 offset-1 left" style="border-right:solid #E5E5E5">
+    <div class="row no-gutters post-metadata">
+      <div class="col-1 ">
+        <div class="avatar" style="width:100%; height=0; padding-bottom:100%;">
+          <img class="rounded-circle" src="{{ post.author.profile.image.url }}" style="width:100%; height=100%;position:absolute;">
+        </div>
+      </div>
+      <div class="col" style="padding:0 15px;">
+        <a href="#" class="post-author" style="width:100%">@ {{ post.author }}</a><br>
+        <small class="text-muted">{{ post.date_posted | date:"F d, Y" }}</small>
+      </div>
+      {% if post.author == user %}
+      <div style="margin-left:auto;margin-right:40px;">
+        <button class="btn btn-danger btn-sm mt-1 mb-1" data-toggle="modal" data-target="#deletePopup">Delete Post</button>
+      </div>
+      <!-- Modal for exit popup-->
+      <div class="modal fade" id="deletePopup" tabindex="-1" role="dialog" aria-labelledby="deletePopupLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deletePopupLabel">Are you sure to delete the following post?</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              {{post.title}}
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="delete-cancel-btn" class="btn btn-secondary" data-dismiss="modal" >Cancel</button>
+              <a type="button" id="delete-yes-btn" class="btn btn-primary" href={% url 'post-delete' post.id %}>Yes</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="row mt-3 no-gutters">
+      <div class="col-md-10">
+        <video autoplay loop controls width="640px" height="380px;" style="background-color:black;">
+            <source src="{{ post.video.url }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+
+    <div class="mt-3">
+        <h4 class="post-title">{{ post.title }}</h4>
+        <p> {{ post.content }}</p>
+    </div>
+  </div>
+
+  <!-- Right side -->
+  <div class="col-md-5 right" style="padding: 0 2%;">
+    <div class="container-fluid" style="width:100%;height:100%;">
+      <div class="row no-gutters">
+        <div class="col">
+          <h5>Comments</h5>
+        </div>
+      </div>
+      <div class="row no-gutters" style="margin: 10px 0;">
+        <div class="col-md-1">
+          <img class="rounded-circle" src="{{ user.profile.image.url }}" style="width:100%;">
+        </div>
+        <div class="col" style="padding-left:10px;">
+          {% if user.is_authenticated %}
+          <form id="comment_form" action="#" method="post">
+            {% csrf_token %}
+            <input type="text" name="post_id" value="{{ post.id }}" style="display:none;">
+            <input type="text" class="form-control" name="comment" placeholder="Add a public comment.">
+          </form>
+          {% else %}
+          <span style="padding:10px 10px;color:rgb(0,0,0,0.25)">Log in before you can comment.</span>
+          {% endif %}
+        </div>
+      </div>
+      <div class="row justify-content-end">
+        <div class="col-auto">
+          {% if user.is_authenticated %}
+          <button type="button" name="button" id="cancel-btn" class="btn btn-secondary btn-sm">Cancel</button>
+          <button type="button" name="button" id="comment-btn" class="btn btn-primary btn-sm" onclick="addComment()">Comment</button>
+          {% else %}
+          <a type="button" name="button" id="login-btn" class="btn btn-secondary btn-sm" href="{% url 'login'  %}?next={% url 'post-detail' post.id %}">Log In</a>
+          {% endif %}
+        </div>
+      </div>
+      <div class="container-fluid" style="padding-top:10px;padding-left:0;">
+        {% for comment in comments %}
+        <div class="row no-gutters mt-3" style="margin: 10px 0;">
+          <div class="col-md-1">
+            <img class="rounded-circle" src="{{ comment.author.profile.image.url }}" style="width:100%;position:absolute;top:50%;transform:translateY(-50%);">
+          </div>
+          <div class="col" style="padding-left:20px;">
+            <small class="comment-author" style="width:100%">{{ comment.author }}</small>
+            <small class="text-muted">{{ comment.date_commented | date:"F d, Y" }}</small><br>
+            <span >{{ comment.content }}</span>
+
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+
+    </div>
+  </div>
+</div>
+{% endblock content %}
+{% block js %}
+<script type="text/javascript">
+  function addComment(){
+    $.ajax({
+      type:"POST",
+      url: '{% url 'add-comment' %}',
+      data: $('#comment_form').serialize(),
+      dataType: "json",
+      success:function(backInfo){
+        location.reload(true);
+      }
+    })
+  }
+
+
+</script>
+{% endblock js%}
+
+
