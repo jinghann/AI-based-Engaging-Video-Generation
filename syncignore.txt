@@ -1,9 +1,0 @@
-sync.sh
-syncignore.txt
-test.html
-test.ipynb
-requirements.txt
-media/*
-vsgenerator/*
-videos/AIalgo/*
-*/migrations/*
