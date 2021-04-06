@@ -1,6 +1,7 @@
 # AI-based-Engaging-Video-Generation
 A web app for AI-empowered e-commerce video generation built with Django and Bootstrap.
-![Image of home page](https://github.com/jinghann/AI-based-Engaging-Video-Generation/Images/master/Home-Page.png)
+
+
 
 ### Features
 + Automatic video generation empowered by AI algorithms from uploaded visual materials (images/video clips).
@@ -11,6 +12,8 @@ A web app for AI-empowered e-commerce video generation built with Django and Boo
 
 ### Web App Demo Link
 + Youtube : https://youtu.be/NoRzEVd8zfg
++ 
+<img src="https://github.com/jinghann/AI-based-Engaging-Video-Generation/blob/master/Images/Home-Page.png" height="300px"></img>
 
 ## System Requirements
 + Python==3.6
